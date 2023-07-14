@@ -172,7 +172,7 @@ class Writer
     protected $excel;
 
     /** @var array */
-    protected array $tempFiles = [];
+    protected $tempFiles = [];
 
     /** @var string */
     protected $tempDir = '';
@@ -182,7 +182,7 @@ class Writer
      *
      * @param array|null $options ;
      */
-    public function __construct(?array $options = [])
+    public function __construct($options = [])
     {
         date_default_timezone_get() || date_default_timezone_set('UTC');//php.ini missing tz, avoid warning
         if (isset($options['excel'])) {
@@ -216,7 +216,7 @@ class Writer
      *
      * @return WriterBuffer
      */
-    public static function makeWriteBuffer(string $fileName)
+    public static function makeWriteBuffer($fileName)
     {
         return new WriterBuffer($fileName);
     }
@@ -232,7 +232,7 @@ class Writer
     /**
      * @param string|null $tempDir
      */
-    public function setTempDir(?string $tempDir = '')
+    public function setTempDir($tempDir = '')
     {
         $this->tempDir = $tempDir;
     }
@@ -266,7 +266,7 @@ class Writer
      *
      * @return bool
      */
-    public function saveToFile(string $fileName, ?bool $overWrite = true, ?array $metadata = []): bool
+    public function saveToFile(string $fileName, $overWrite = true, $metadata = [])
     {
         $sheets = $this->excel->getSheets();
         foreach ($sheets as $sheet) {
@@ -357,7 +357,7 @@ class Writer
      *
      * @return array
      */
-    protected function _writeSharedStrings($zip): array
+    protected function _writeSharedStrings($zip)
     {
         $sharedStrings = $this->excel->getSharedStrings();
         if ($sharedStrings) {
@@ -387,7 +387,7 @@ class Writer
      *
      * @return array
      */
-    protected function _writeCommentsFiles($zip): array
+    protected function _writeCommentsFiles($zip)
     {
         $files = [];
 
@@ -470,7 +470,7 @@ class Writer
      *
      * @return array
      */
-    protected function _writeThemesFiles($zip): array
+    protected function _writeThemesFiles($zip)
     {
         $files = [];
 
@@ -496,7 +496,7 @@ class Writer
      *
      * @return WriterBuffer
      */
-    protected function _writeSheetHead(Sheet $sheet): WriterBuffer
+    protected function _writeSheetHead($sheet)
     {
         $fileWriter = self::makeWriteBuffer($this->tempFilename());
 
@@ -580,7 +580,7 @@ class Writer
     /**
      * @param Sheet $sheet
      */
-    public function writeSheetDataBegin(Sheet $sheet)
+    public function writeSheetDataBegin($sheet)
     {
         //if already initialized
         if ($sheet->open) {
@@ -593,7 +593,7 @@ class Writer
     /**
      * @param Sheet $sheet
      */
-    public function writeSheetDataEnd(Sheet $sheet)
+    public function writeSheetDataEnd($sheet)
     {
         if ($sheet->close) {
             return;
@@ -668,7 +668,7 @@ class Writer
      *
      * @return string
      */
-    protected function _convertFormula($formula, $baseAddress): string
+    protected function _convertFormula($formula, $baseAddress)
     {
         static $functionNames = [];
 
@@ -735,7 +735,7 @@ class Writer
      * @param mixed $numFormatType
      * @param int|null $cellStyleIdx
      */
-    public function _writeCell(WriterBuffer $file, int $rowNumber, int $colNumber, $value, $numFormatType, ?int $cellStyleIdx = 0)
+    public function _writeCell(WriterBuffer $file, $rowNumber, $colNumber, $value, $numFormatType, $cellStyleIdx = 0)
     {
         $cellName = Excel::cellAddress($rowNumber, $colNumber);
 
@@ -800,7 +800,7 @@ class Writer
      *
      * @return string
      */
-    protected function _makeBorderSideTag(?array $border, string $side): string
+    protected function _makeBorderSideTag($border, string $side)
     {
         if (empty($border[$side]) || empty($border[$side]['style'])) {
             $tag = "<$side/>";
@@ -821,7 +821,7 @@ class Writer
      *
      * @return string
      */
-    protected function _makeBordersTag(array $borders): string
+    protected function _makeBordersTag($borders)
     {
         $tag = '<borders count="' . (count($borders)) . '">';
         foreach ($borders as $border) {
@@ -1022,7 +1022,7 @@ class Writer
      *
      * @return string
      */
-    protected function _buildAppXML(?array $metadata): string
+    protected function _buildAppXML($metadata)
     {
         $xmlText = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n";
         $xmlText .= '<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">';
@@ -1039,7 +1039,7 @@ class Writer
      *
      * @return string
      */
-    protected function _buildCoreXML(?array $metadata): string
+    protected function _buildCoreXML($metadata)
     {
         $coreXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n";
         $coreXml .= '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
@@ -1077,7 +1077,7 @@ class Writer
      *
      * @return string
      */
-    protected function _buildWorkbookXML(array $sheets)
+    protected function _buildWorkbookXML($sheets)
     {
         $i = 0;
         $xmlText = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n";
@@ -1122,7 +1122,7 @@ class Writer
      *
      * @return string
      */
-    protected function _buildWorkbookRelsXML(array $sheets, array $xmlPartFiles)
+    protected function _buildWorkbookRelsXML($sheets, $xmlPartFiles)
     {
         $xmlText = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n";
         $xmlText .= '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
@@ -1157,7 +1157,7 @@ class Writer
      *
      * @return string
      */
-    protected function _buildContentTypesXML(array $sheets, array $xmlPartFiles): string
+    protected function _buildContentTypesXML($sheets, $xmlPartFiles)
     {
         $xmlText = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n";
         $xmlText .= '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">';
@@ -1199,7 +1199,7 @@ class Writer
     /**
      * @return string
      */
-    protected function _buildThemeXML(): string
+    protected function _buildThemeXML()
     {
         return '';
     }
@@ -1211,7 +1211,7 @@ class Writer
      *
      * @return string
      */
-    public static function sanitizeFilename($filename): string
+    public static function sanitizeFilename($filename)
     {
         $nonPrinting = array_map('chr', range(0, 31));
         $invalidChars = ['<', '>', '?', '"', ':', '|', '\\', '/', '*', '&'];
@@ -1225,7 +1225,7 @@ class Writer
      *
      * @return string
      */
-    public static function sanitizeSheetName($sheetName): string
+    public static function sanitizeSheetName($sheetName)
     {
         static $badChars  = '\\/?*:[]';
         static $goodChars = '        ';
@@ -1242,7 +1242,7 @@ class Writer
      *
      * @return string
      */
-    public static function xmlSpecialChars($val): string
+    public static function xmlSpecialChars($val)
     {
         //note, bad chars does not include \t\n\r (\x09\x0a\x0d)
         static $badChars = "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x0b\x0c\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x7f";

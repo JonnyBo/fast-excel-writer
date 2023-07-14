@@ -17,7 +17,7 @@ class Excel
     public const MIN_ROW = 0;
     public const MIN_COL = 0;
 
-    protected static string $tempDir;
+    protected static $tempDir;
 
     /** @var Writer */
     public $writer;
@@ -26,29 +26,29 @@ class Excel
     public $style;
 
     /** @var int  */
-    protected int $maxSheetIndex = 0;
+    protected $maxSheetIndex = 0;
 
     /** @var array Sheet[] */
-    protected array $sheets = [];
+    protected $sheets = [];
 
-    protected array $themes = [];
+    protected $themes = [];
 
-    protected array $metadata = [];
+    protected $metadata = [];
 
     /** @var bool */
-    protected bool $isRightToLeft = false;
+    protected $isRightToLeft = false;
 
-    protected array $sharedStrings = [];
-    protected int $sharedStringsCount = 0;
+    protected $sharedStrings = [];
+    protected $sharedStringsCount = 0;
 
-    protected string $fileName = '';
+    protected $fileName = '';
 
     /**
      * Excel constructor
      *
      * @param array|null $options
      */
-    public function __construct(?array $options = [])
+    public function __construct($options = [])
     {
         $writerOptions = [
             'excel' => $this,
@@ -84,7 +84,7 @@ class Excel
      *
      * @return object
      */
-    protected function getObject($class, $options = null): object
+    protected function getObject($class, $options = null)
     {
         if (is_object($class)) {
             return $class;
@@ -99,7 +99,7 @@ class Excel
      *
      * @return Excel
      */
-    public static function create($sheets = null, ?array $options = []): Excel
+    public static function create($sheets = null, $options = [])
     {
         $excel = new self($options);
         if ($sheets) {
@@ -124,7 +124,7 @@ class Excel
      *
      * @return Sheet
      */
-    public static function createSheet(string $sheetName): Sheet
+    public static function createSheet($sheetName)
     {
         return new Sheet($sheetName);
     }
@@ -139,7 +139,7 @@ class Excel
         self::$tempDir = $tempDir;
     }
 
-    public static function generateUuid(): string
+    public static function generateUuid()
     {
         // xxxxxxxx-xxxx-4xxx-[8-B]xxx-xxxxxxxxxxxx
         $hash = md5(microtime());
@@ -204,7 +204,7 @@ class Excel
      *
      * @return $this
      */
-    public function setLocale(string $locale, string $dir = null): Excel
+    public function setLocale($locale, $dir = null)
     {
         $localeSettings = [];
         // default settings
@@ -323,7 +323,7 @@ class Excel
      *
      * @return $this
      */
-    public function setTitle(?string $title = ''): Excel
+    public function setTitle($title = '')
     {
         return $this->setMetadata('title', $title);
     }
@@ -333,7 +333,7 @@ class Excel
      *
      * @return $this
      */
-    public function setSubject(?string $subject = ''): Excel
+    public function setSubject($subject = '')
     {
         return $this->setMetadata('subject', $subject);
     }
@@ -343,7 +343,7 @@ class Excel
      *
      * @return $this
      */
-    public function setAuthor(?string $author = ''): Excel
+    public function setAuthor($author = '')
     {
         return $this->setMetadata('author', $author);
     }
@@ -353,7 +353,7 @@ class Excel
      *
      * @return $this
      */
-    public function setCompany(?string $company = ''): Excel
+    public function setCompany($company = '')
     {
         return $this->setMetadata('company', $company);
     }
@@ -363,7 +363,7 @@ class Excel
      *
      * @return $this
      */
-    public function setDescription(?string $description = ''): Excel
+    public function setDescription($description = '')
     {
         return $this->setMetadata('description', $description);
     }
@@ -373,7 +373,7 @@ class Excel
      *
      * @return $this
      */
-    public function setKeywords($keywords): Excel
+    public function setKeywords($keywords)
     {
         if (!$keywords) {
             $newKeywords = [];
@@ -391,7 +391,7 @@ class Excel
      *
      * @return $this
      */
-    public function setMetadata($key, $value): Excel
+    public function setMetadata($key, $value)
     {
         $this->metadata[$key] = $value;
 
@@ -422,7 +422,7 @@ class Excel
     /**
      * @return bool
      */
-    public function isRightToLeft(): bool
+    public function isRightToLeft()
     {
         return $this->isRightToLeft;
     }
@@ -434,7 +434,7 @@ class Excel
      *
      * @return $this
      */
-    public function setDefaultFont($font): Excel
+    public function setDefaultFont($font)
     {
         $this->style->setDefaultFont(['GENERAL' => $font]);
 
@@ -448,7 +448,7 @@ class Excel
      *
      * @return $this
      */
-    public function setDefaultStyle(array $style): Excel
+    public function setDefaultStyle($style)
     {
         $this->style->setDefaultStyle($style);
 
@@ -462,7 +462,7 @@ class Excel
      *
      * @return int
      */
-    public static function colNumber($colLetter): int
+    public static function colNumber($colLetter)
     {
         if (is_numeric($colLetter)) {
             $colNumber = $colLetter;
@@ -490,7 +490,7 @@ class Excel
      *
      * @return int
      */
-    public static function colIndex($colLetter): int
+    public static function colIndex($colLetter)
     {
         $colNumber = self::colNumber($colLetter);
 
@@ -508,7 +508,7 @@ class Excel
      *
      * @return array
      */
-    public static function colNumberRange($colLetter): array
+    public static function colNumberRange($colLetter)
     {
         $result = [];
         if (is_array($colLetter)) {
@@ -537,7 +537,7 @@ class Excel
      *
      * @return array
      */
-    public static function colIndexRange($colLetter): array
+    public static function colIndexRange($colLetter)
     {
         $result = self::colNumberRange($colLetter);
 
@@ -561,7 +561,7 @@ class Excel
      *
      * @return array
      */
-    public static function colLetterRange($colKeys): array
+    public static function colLetterRange($colKeys)
     {
         if ($colKeys) {
             if (is_array($colKeys)) {
@@ -617,7 +617,7 @@ class Excel
      *
      * @return string
      */
-    public static function colLetter(int $colNumber): string
+    public static function colLetter(int $colNumber)
     {
         static $letters = ['',
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -645,7 +645,7 @@ class Excel
      *
      * @return array
      */
-    public static function colKeysToLetters(array $data): array
+    public static function colKeysToLetters(array $data)
     {
         return array_combine(Excel::colLetterRange(array_keys($data)), array_values($data));
     }
@@ -655,7 +655,7 @@ class Excel
      *
      * @return array
      */
-    public static function colKeysToNumbers(array $data): array
+    public static function colKeysToNumbers(array $data)
     {
         return array_combine(Excel::colNumberRange(array_keys($data)), array_values($data));
     }
@@ -665,7 +665,7 @@ class Excel
      *
      * @return array
      */
-    public static function colKeysToIndexes(array $data): array
+    public static function colKeysToIndexes(array $data)
     {
         return array_combine(Excel::colIndexRange(array_keys($data)), array_values($data));
     }
@@ -680,7 +680,7 @@ class Excel
      *
      * @return string Cell label/coordinates, ex: A1, C3, AA42 (or if $absolute==true: $A$1, $C$3, $AA$42)
      */
-    public static function cellAddress(int $rowNumber, int $colNumber, ?bool $absolute = false, bool $absoluteRow = null): string
+    public static function cellAddress(int $rowNumber, int $colNumber, $absolute = false, bool $absoluteRow = null)
     {
         if ($rowNumber > 0 && $colNumber > 0) {
             $letter = self::colLetter($colNumber);
@@ -708,7 +708,7 @@ class Excel
      *
      * @return array|null
      */
-    public static function rangeDimensionRelative($range, $offset, ?bool $exception = false): ?array
+    public static function rangeDimensionRelative($range, $offset, $exception = false)
     {
         $colNum1 = $colNum2 = $rowNum1 = $rowNum2 = null;
         if (is_array($range)) {
@@ -850,7 +850,7 @@ class Excel
      *
      * @return array|null
      */
-    public static function rangeDimension($range, ?bool $exception = false): ?array
+    public static function rangeDimension($range, $exception = false)
     {
         return self::rangeDimensionRelative($range, null, $exception);
     }
@@ -862,7 +862,7 @@ class Excel
      *
      * @return int[]
      */
-    public static function rangeRelOffsets(string $relAddress): array
+    public static function rangeRelOffsets(string $relAddress)
     {
         $rowOffset1 = $colOffset1 = $rowOffset2 = $colOffset2 = null;
         $offset = strtoupper($relAddress);
@@ -892,7 +892,7 @@ class Excel
      *
      * @return int
      */
-    public function addSharedString(string $string): int
+    public function addSharedString(string $string)
     {
         if (!isset($this->sharedStrings[$string])) {
             $this->sharedStrings[$string] = ['id' => $this->sharedStringsCount++, 'count' => 1];
@@ -907,7 +907,7 @@ class Excel
     /**
      * @return array
      */
-    public function getSharedStrings(): array
+    public function getSharedStrings()
     {
         return $this->sharedStrings;
     }
@@ -915,7 +915,7 @@ class Excel
     /**
      * @return array
      */
-    public function getThemes(): array
+    public function getThemes()
     {
         return $this->themes;
     }
@@ -931,7 +931,7 @@ class Excel
     /**
      * @return string
      */
-    public function getDefaultSheetName(): string
+    public function getDefaultSheetName()
     {
         return 'Sheet' . (++$this->maxSheetIndex);
     }
@@ -941,7 +941,7 @@ class Excel
      *
      * @return Sheet
      */
-    public function makeSheet(string $sheetName = null): Sheet
+    public function makeSheet(string $sheetName = null)
     {
         if ($sheetName === null) {
             $sheetName = $this->getDefaultSheetName();
@@ -968,7 +968,7 @@ class Excel
      *
      * @return Sheet|null
      */
-    public function getSheet($index = null): ?Sheet
+    public function getSheet($index = null)
     {
         if (null === $index) {
             return reset($this->sheets);
@@ -999,7 +999,7 @@ class Excel
      *
      * @param int|string|null $index
      */
-    public function removeSheet($index = null): void
+    public function removeSheet($index = null)
     {
         if (null === $index) {
             array_shift($this->sheets);
@@ -1026,7 +1026,7 @@ class Excel
      *
      * @return Sheet[]
      */
-    public function getSheets(): array
+    public function getSheets()
     {
         return $this->sheets;
     }
@@ -1052,7 +1052,7 @@ class Excel
      *
      * @return $this
      */
-    public function setFileName(string $fileName): Excel
+    public function setFileName(string $fileName)
     {
         if (!pathinfo($fileName, PATHINFO_EXTENSION)) {
             $fileName .= '.xlsx';
@@ -1067,7 +1067,7 @@ class Excel
      *
      * @return string
      */
-    public function getFileName(): string
+    public function getFileName()
     {
         return $this->fileName;
     }
@@ -1080,7 +1080,7 @@ class Excel
      *
      * @return bool
      */
-    public function save(?string $fileName = null, ?bool $overWrite = true): bool
+    public function save(?string $fileName = null, $overWrite = true)
     {
         if (!$fileName && $this->fileName) {
             $fileName = $this->fileName;

@@ -30,95 +30,95 @@ class Sheet
     protected const NOTE_DEFAULT_COLOR = '#FFFFE1';
 
     /** @var Excel */
-    public Excel $excel;
+    public $excel;
 
     /** @var int Index of the sheet */
-    public int $index;
+    public $index;
 
     /** @var string Key of the sheet */
-    public string $key;
+    public $key;
 
     /** @var string $relId Id of the relationship */
-    public string $relId;
+    public $relId;
 
-    public bool $active = false;
+    public $active = false;
 
     /** @var string Temporary file */
-    public string $fileTempName = '';
+    public $fileTempName = '';
 
     /** @var string Real sheet name */
-    public string $sheetName = '';
+    public $sheetName = '';
 
-    public string $sanitizedSheetName = '';
-    public string $xmlName = '';
+    public $sanitizedSheetName = '';
+    public $xmlName = '';
 
-    public string $fileRels = '';
-    public string $xmlRels = '';
+    public $fileRels = '';
+    public $xmlRels = '';
 
-    public bool $open = false;
-    public bool $close = false;
+    public $open = false;
+    public $close = false;
 
     // written rows of sheet
-    public int $rowCountWritten = 0;
+    public $rowCountWritten = 0;
 
     // written cols of row
-    public int $colCountWritten = 0;
+    public $colCountWritten = 0;
 
-    public ?WriterBuffer $fileWriter = null;
+    public $fileWriter = null;
 
-    public array $defaultStyle = [];
+    public $defaultStyle = [];
 
-    protected array $sheetStylesSummary = [];
-
-    // ZERO based
-    public int $freezeRows = 0;
-    public int $freezeColumns = 0;
-
-    public ?string $autoFilter = null;
-    public string $absoluteAutoFilter = '';
+    protected $sheetStylesSummary = [];
 
     // ZERO based
-    public array $colWidths = [];
-    public array $colFormulas = [];
-    public array $colStyles = [];
+    public $freezeRows = 0;
+    public $freezeColumns = 0;
 
-    protected array $colStylesSummary = [];
+    public $autoFilter = null;
+    public $absoluteAutoFilter = '';
+
+    // ZERO based
+    public $colWidths = [];
+    public $colFormulas = [];
+    public $colStyles = [];
+
+    protected $colStylesSummary = [];
 
     // special styles by field names
-    protected array $fieldStyles = [];
+    protected $fieldStyles = [];
 
     // ZERO based
-    public array $rowHeights = [];
-    public array $rowStyles = [];
+    public $rowHeights = [];
+    public $rowStyles = [];
 
     // ZERO based
-    protected array $cells = [];
+    protected $cells = [];
 
     // Current row index
-    protected int $currentRow = 0;
+    protected $currentRow = 0;
 
     // Current column index
-    protected int $currentCol = 0;
+    protected $currentCol = 0;
 
-    protected array $mergeCells = [];
-    protected array $totalArea = [];
-    protected array $areas = [];
+    protected $mergeCells = [];
+    protected $totalArea = [];
+    protected $areas = [];
 
-    protected array $pageOptions = [];
-
-
-    protected int $relationshipId = 0;
-
-    protected array $relationships = [];
-
-    protected array $externalLinks = [];
-
-    protected array $lastTouch = [];
-
-    protected array $namedRanges = [];
+    protected $pageOptions = [];
 
 
-    protected array $notes = [];
+    protected $relationshipId = 0;
+
+    protected $relationships = [];
+
+    protected $externalLinks = [];
+
+    protected $lastTouch = [];
+
+    protected $namedRanges = [];
+
+
+    protected $notes = [];
 
 
     /**
@@ -126,7 +126,7 @@ class Sheet
      *
      * @param string $sheetName
      */
-    public function __construct(string $sheetName)
+    public function __construct($sheetName)
     {
         $this->setName($sheetName);
         $this->pageOptions['orientation'] = 'portrait';
@@ -180,7 +180,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setFileWriter(WriterBuffer $fileWriter): Sheet
+    public function setFileWriter($fileWriter)
     {
         if (!$this->fileWriter) {
             $this->fileWriter = $fileWriter;
@@ -196,7 +196,7 @@ class Sheet
      *
      * @return $this
      */
-    public function resetFileWriter(WriterBuffer $fileWriter): Sheet
+    public function resetFileWriter($fileWriter)
     {
         $this->fileWriter = $fileWriter;
         $this->fileTempName = $fileWriter->getFileName();
@@ -208,7 +208,7 @@ class Sheet
     /**
      * @return array
      */
-    public function getExternalLinks(): array
+    public function getExternalLinks()
     {
         return $this->relationships['links'] ?? [];
     }
@@ -216,7 +216,7 @@ class Sheet
     /**
      * @return string|null
      */
-    public function getXmlRels(): ?string
+    public function getXmlRels()
     {
         if ($this->relationships) {
             $result = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
@@ -251,7 +251,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setName(string $sheetName): Sheet
+    public function setName(string $sheetName)
     {
         $this->sheetName = $sheetName;
         $this->sanitizedSheetName = Writer::sanitizeSheetName($sheetName);
@@ -264,7 +264,7 @@ class Sheet
      *
      * @return string
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->sheetName;
     }
@@ -275,7 +275,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setPageOptions(string $option, $value): Sheet
+    public function setPageOptions(string $option, $value)
     {
         if ($this->rowCountWritten) {
             throw new Exception('Cannot set page settings after rows writing');
@@ -298,7 +298,7 @@ class Sheet
     /**
      * @return $this
      */
-    public function pageOrientationPortrait(): Sheet
+    public function pageOrientationPortrait()
     {
         return $this->setPageOptions('orientation', 'portrait');
     }
@@ -308,7 +308,7 @@ class Sheet
      *
      * @return $this
      */
-    public function pagePortrait(): Sheet
+    public function pagePortrait()
     {
         return $this->setPageOptions('orientation', 'portrait');
     }
@@ -316,7 +316,7 @@ class Sheet
     /**
      * @return $this
      */
-    public function pageOrientationLandscape(): Sheet
+    public function pageOrientationLandscape()
     {
         return $this->setPageOptions('orientation', 'landscape');
     }
@@ -326,7 +326,7 @@ class Sheet
      *
      * @return $this
      */
-    public function pageLandscape(): Sheet
+    public function pageLandscape()
     {
         return $this->setPageOptions('orientation', 'landscape');
     }
@@ -336,7 +336,7 @@ class Sheet
      *
      * @return $this
      */
-    public function pageFitToWidth($numPage = 1): Sheet
+    public function pageFitToWidth($numPage = 1)
     {
         if (strtolower($numPage) === 'auto') {
             $numPage = 0;
@@ -352,7 +352,7 @@ class Sheet
      *
      * @return $this
      */
-    public function pageFitToHeight($numPage = 1): Sheet
+    public function pageFitToHeight($numPage = 1)
     {
         if (strtolower($numPage) === 'auto') {
             $numPage = 0;
@@ -366,7 +366,7 @@ class Sheet
     /**
      * @return string
      */
-    public function getPageOrientation(): string
+    public function getPageOrientation()
     {
         return $this->pageOptions['orientation'] ?? 'portrait';
     }
@@ -374,7 +374,7 @@ class Sheet
     /**
      * @return int
      */
-    public function getPageFitToWidth(): int
+    public function getPageFitToWidth()
     {
         return (int)($this->pageOptions['fit_width'] ?? 0);
     }
@@ -382,7 +382,7 @@ class Sheet
     /**
      * @return int
      */
-    public function getPageFitToHeight(): int
+    public function getPageFitToHeight()
     {
         return (int)($this->pageOptions['fit_height'] ?? 0);
     }
@@ -390,7 +390,7 @@ class Sheet
     /**
      * @return bool
      */
-    public function getPageFit(): bool
+    public function getPageFit()
     {
         return $this->getPageFitToWidth() || $this->getPageFitToHeight();
     }
@@ -404,7 +404,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setFreeze($freezeRows, $freezeColumns = null): Sheet
+    public function setFreeze($freezeRows, $freezeColumns = null)
     {
         if (!is_numeric($freezeRows) && null === $freezeColumns) {
             $dimension = Excel::rangeDimension($freezeRows);
@@ -426,7 +426,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setFreezeRows(int $freezeRows): Sheet
+    public function setFreezeRows(int $freezeRows)
     {
         $this->freezeRows = ($freezeRows > 0) ? $freezeRows : 0;
 
@@ -438,7 +438,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setFreezeColumns(int $freezeColumns): Sheet
+    public function setFreezeColumns(int $freezeColumns)
     {
         $this->freezeColumns = ($freezeColumns > 0) ? $freezeColumns : 0;
 
@@ -451,7 +451,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setAutofilter(?int $row = 1, ?int $col = 1): Sheet
+    public function setAutofilter($row = 1, $col = 1)
     {
         if ($row >= 0) {
             if (empty($row)) {
@@ -471,7 +471,7 @@ class Sheet
      *
      * @return array
      */
-    protected function normalizeColKeys(array $columns): array
+    protected function normalizeColKeys(array $columns)
     {
         $keys = array_keys($columns);
         if (reset($keys) === 0) {
@@ -502,7 +502,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setColOptions($arg1, array $arg2 = null): Sheet
+    public function setColOptions($arg1, $arg2 = null)
     {
         if ($this->currentCol) {
             $this->_writeCurrentRow();
@@ -573,7 +573,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setColStyles($arg1, array $arg2 = null): Sheet
+    public function setColStyles($arg1, $arg2 = null)
     {
         return $this->setColOptions($arg1, $arg2);
     }
@@ -586,7 +586,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setColWidth($col, $width): Sheet
+    public function setColWidth($col, $width)
     {
         $colIndexes = Excel::colIndexRange($col);
         foreach($colIndexes as $colIdx) {
@@ -612,7 +612,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setColWidths(array $widths): Sheet
+    public function setColWidths(array $widths)
     {
         if ($widths) {
             $widths = Excel::colKeysToLetters($widths);
@@ -631,7 +631,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setColWidthAuto($col): Sheet
+    public function setColWidthAuto($col)
     {
         return $this->setColWidth($col, 'auto');
     }
@@ -644,7 +644,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setColStyle($col, $style): Sheet
+    public function setColStyle($col, $style)
     {
         if ($this->currentCol) {
             $this->_writeCurrentRow();
@@ -675,7 +675,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setColFormula($col, string $formula): Sheet
+    public function setColFormula($col, string $formula)
     {
         if ($this->currentCol) {
             $this->_writeCurrentRow();
@@ -704,7 +704,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setColFormat($col, $format): Sheet
+    public function setColFormat($col, $format)
     {
         $this->setColStyle($col, ['format' => $format]);
         $this->clearSummary();
@@ -719,7 +719,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setColFormats(array $formats): Sheet
+    public function setColFormats(array $formats)
     {
         if ($formats) {
             $formats = array_combine(Excel::colLetterRange(array_keys($formats)), array_values($formats));
@@ -736,7 +736,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setFieldStyles(array $styles): Sheet
+    public function setFieldStyles(array $styles)
     {
         if ($styles) {
             foreach ($styles as $field => $style) {
@@ -758,7 +758,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setFieldFormats(array $formats): Sheet
+    public function setFieldFormats(array $formats)
     {
         if ($formats) {
             $styles = [];
@@ -779,7 +779,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setRowHeight($rowNum, $height): Sheet
+    public function setRowHeight($rowNum, $height)
     {
         if (is_array($rowNum)) {
             foreach ($rowNum as $row) {
@@ -799,7 +799,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setRowHeights(array $heights): Sheet
+    public function setRowHeights(array $heights)
     {
         foreach ($heights as $rowNum => $rowHeight) {
             $this->setRowHeight($rowNum, $rowHeight);
@@ -817,7 +817,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setRowOptions($arg1, array $arg2 = null): Sheet
+    public function setRowOptions($arg1, array $arg2 = null)
     {
         if ($arg2 === null) {
             $options = $arg1;
@@ -855,7 +855,7 @@ class Sheet
         return $this;
     }
 
-    public function setRowStyles($arg1, array $arg2 = null): Sheet
+    public function setRowStyles($arg1, array $arg2 = null)
     {
         return $this->setRowOptions($arg1, $arg2);
     }
@@ -1042,7 +1042,7 @@ class Sheet
      *
      * @return float
      */
-    protected function _calcWidth(string $str, $fontSize, ?bool $numFormat = false): float
+    protected function _calcWidth(string $str, $fontSize, $numFormat = false)
     {
         if ($numFormat && strpos($str, ';')) {
             $lenArray = [];
@@ -1079,7 +1079,7 @@ class Sheet
      *
      * @return string
      */
-    protected function _formatValue($value, string $format): string
+    protected function _formatValue($value, string $format)
     {
         if (is_numeric($value)) {
             if (strpos($format, ';')) {
@@ -1169,7 +1169,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setDefaultStyle(array $style): Sheet
+    public function setDefaultStyle(array $style)
     {
         $this->clearSummary();
         $this->defaultStyle = Style::normalize($style);
@@ -1182,7 +1182,7 @@ class Sheet
      *
      * @return array
      */
-    public function getDefaultStyle(): array
+    public function getDefaultStyle()
     {
         return $this->defaultStyle;
     }
@@ -1195,7 +1195,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setDefaultFont($font): Sheet
+    public function setDefaultFont($font)
     {
         $normStyle = Style::normalizeFont($font);
         if (isset($normStyle['font'])) {
@@ -1215,7 +1215,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setDefaultFontName(string $fontName): Sheet
+    public function setDefaultFontName(string $fontName)
     {
         $this->defaultStyle['font']['font-name'] = $fontName;
 
@@ -1227,7 +1227,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setDefaultFontSize(int $fontSize): Sheet
+    public function setDefaultFontSize(int $fontSize)
     {
         $this->defaultStyle['font']['font-size'] = $fontSize;
 
@@ -1239,7 +1239,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setDefaultFontStyle(string $fontStyle): Sheet
+    public function setDefaultFontStyle(string $fontStyle)
     {
         $key = 'font-style-' . strtolower($fontStyle);
         $this->defaultStyle['font'][$key] = 1;
@@ -1247,7 +1247,7 @@ class Sheet
         return $this;
     }
 
-    public function setDefaultFontStyleBold(): Sheet
+    public function setDefaultFontStyleBold()
     {
         return $this->applyFontStyle('bold');
     }
@@ -1255,7 +1255,7 @@ class Sheet
     /**
      * @return $this
      */
-    public function setDefaultFontStyleItalic(): Sheet
+    public function setDefaultFontStyleItalic()
     {
         return $this->applyFontStyle('italic');
     }
@@ -1265,7 +1265,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setDefaultFontStyleUnderline(?bool $double = false): Sheet
+    public function setDefaultFontStyleUnderline($double = false)
     {
         $this->defaultStyle['font']['font-style-underline'] = ['font-style-underline' => $double ? 2 : 1];
 
@@ -1275,7 +1275,7 @@ class Sheet
     /**
      * @return $this
      */
-    public function setDefaultFontStyleStrikethrough(): Sheet
+    public function setDefaultFontStyleStrikethrough()
     {
         return $this->applyFontStyle('strikethrough');
     }
@@ -1285,7 +1285,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setDefaultFontColor(string $fontColor): Sheet
+    public function setDefaultFontColor(string $fontColor)
     {
         $this->defaultStyle['font']['font-style-underline'] = ['font-color' => $fontColor];
 
@@ -1306,7 +1306,7 @@ class Sheet
      *
      * @throws \Exception
      */
-    public function writeCell($value, array $styles = null): Sheet
+    public function writeCell($value, $styles = null)
     {
         if ($this->lastTouch['ref'] === 'row') {
             $this->_writeCurrentRow();
@@ -1332,7 +1332,7 @@ class Sheet
      *
      * @throws \Exception
      */
-    public function nextCell(): Sheet
+    public function nextCell()
     {
         $this->writeCell(null);
 
@@ -1350,7 +1350,7 @@ class Sheet
      *
      * @return $this
      */
-    public function writeHeader(array $header, array $rowStyle = null, ?array $colStyles = []): Sheet
+    public function writeHeader(array $header, $rowStyle = null, $colStyles = [])
     {
         $rowValues = [];
         $colNum = 0;
@@ -1384,7 +1384,7 @@ class Sheet
      *
      * @return array
      */
-    protected function _moveTo(&$cellAddress): ?array
+    protected function _moveTo(&$cellAddress)
     {
         $address = $this->_parseAddress($cellAddress);
         if (!isset($address['row'], $address['col'])) {
@@ -1425,7 +1425,7 @@ class Sheet
      *
      * @return $this
      */
-    public function writeTo($cellAddress, $value, ?array $styles = []): Sheet
+    public function writeTo($cellAddress, $value, $styles = [])
     {
         $address = $this->_moveTo($cellAddress);
         $this->_touchStart($address['rowIndex'], $address['colIndex'], 'cell');
@@ -1455,7 +1455,7 @@ class Sheet
      *
      * @return $this
      */
-    public function mergeCells($rangeSet): Sheet
+    public function mergeCells($rangeSet)
     {
         foreach((array)$rangeSet as $range) {
             if (isset($this->mergeCells[$range]) || empty($range)) {
@@ -1490,7 +1490,7 @@ class Sheet
      *
      * @return $this
      */
-    public function mergeRelCells($rangeSet): Sheet
+    public function mergeRelCells($rangeSet)
     {
         if (is_int($rangeSet)) {
             $rangeSet = 'A' . $this->rowCountWritten . ':' . Excel::colLetter($rangeSet)  . $this->rowCountWritten;
@@ -1526,7 +1526,7 @@ class Sheet
      *
      * @return array
      */
-    public function getMergedCells(): array
+    public function getMergedCells()
     {
         return array_keys($this->mergeCells);
     }
@@ -1597,7 +1597,7 @@ class Sheet
      *
      * @return $this
      */
-    public function writeRow(array $rowValues = [], array $rowStyle = null, array $cellStyles = null): Sheet
+    public function writeRow($rowValues = [], $rowStyle = null, $cellStyles = null)
     {
         if ($this->currentCol || $this->areas) {
             $this->_writeCurrentRow();
@@ -1668,7 +1668,7 @@ class Sheet
      *
      * @return $this
      */
-    public function nextRow(?array $options = []): Sheet
+    public function nextRow($options = [])
     {
         if (!empty($options)) {
             $this->rowStyles[$this->currentRow] = $options;
@@ -1685,7 +1685,7 @@ class Sheet
      *
      * @return $this
      */
-    public function skipRow(?int $rowCount = 1): Sheet
+    public function skipRow($rowCount = 1)
     {
         for ($i = 0; $i < $rowCount; $i++) {
             $this->nextRow();
@@ -1701,7 +1701,7 @@ class Sheet
      *
      * @return Area
      */
-    public function makeArea(string $range): Area
+    public function makeArea(string $range)
     {
         $area = new Area($this, $range);
 
@@ -1736,7 +1736,7 @@ class Sheet
      *
      * @return Area
      */
-    public function beginArea(string $cellAddress = null): Area
+    public function beginArea($cellAddress = null)
     {
         if (null === $cellAddress) {
             $cellAddress = 'A' . ($this->rowCountWritten + 1);
@@ -1753,7 +1753,7 @@ class Sheet
     /**
      * @return $this
      */
-    public function endAreas(): Sheet
+    public function endAreas()
     {
         $this->_writeCurrentRow();
 
@@ -1765,7 +1765,7 @@ class Sheet
      *
      * @return array
      */
-    protected function _parseAddress($cellAddress): ?array
+    protected function _parseAddress($cellAddress)
     {
         if (is_array($cellAddress) && isset($cellAddress['row'], $cellAddress['col'])) {
             return $cellAddress;
@@ -1795,7 +1795,7 @@ class Sheet
      *
      * @return array|null
      */
-    protected function _rangeDimension(string $cellAddress, ?int $colOffset = 1, ?int $rowOffset = 1): ?array
+    protected function _rangeDimension(string $cellAddress, $colOffset = 1, $rowOffset = 1)
     {
         if (preg_match('/^R\[?(-?\d+)?\]?C/', $cellAddress)) {
             // relative address
@@ -1820,7 +1820,7 @@ class Sheet
      *
      * @return array
      */
-    protected function _setCellData($cellAddress, $value, $styles = null, ?bool $merge = false, ?bool $changeCurrent = false)
+    protected function _setCellData($cellAddress, $value, $styles = null, $merge = false, $changeCurrent = false)
     {
         $dimension = [];
         if (null === $cellAddress) {
@@ -1900,7 +1900,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setValue($cellAddress, $value, ?array $styles = null): Sheet
+    public function setValue($cellAddress, $value, $styles = null)
     {
         $dimension = $this->_setCellData($cellAddress, $value, $styles, true);
         if (isset($dimension['rowNum1'], $dimension['rowNum2'], $dimension['colNum1'], $dimension['colNum2'])) {
@@ -1937,7 +1937,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setFormula($cellAddress, $value, array $styles = null): Sheet
+    public function setFormula($cellAddress, $value, $styles = null)
     {
         if (empty($value)) {
             $value = null;
@@ -1959,7 +1959,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setStyle(string $cellAddress, $style, ?bool $mergeStyles = false): Sheet
+    public function setStyle(string $cellAddress, $style, $mergeStyles = false)
     {
         $dimension = $this->_rangeDimension($cellAddress);
         if ($dimension['rowNum1'] <= $this->rowCountWritten) {
@@ -1993,7 +1993,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setCellStyle(string $cellAddress, $style, ?bool $mergeStyles = false): Sheet
+    public function setCellStyle(string $cellAddress, $style, $mergeStyles = false)
     {
         return $this->setStyle($cellAddress, $style, $mergeStyles);
     }
@@ -2004,7 +2004,7 @@ class Sheet
      *
      * @return $this
      */
-    public function addStyle(string $cellAddr, array $style): Sheet
+    public function addStyle(string $cellAddr, array $style)
     {
         return $this->setStyle($cellAddr, $style, true);
     }
@@ -2015,7 +2015,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setFormat(string $cellAddr, string $format): Sheet
+    public function setFormat(string $cellAddr, string $format)
     {
         return $this->setStyle($cellAddr, ['format' => $format], true);
     }
@@ -2026,7 +2026,7 @@ class Sheet
      *
      * @return $this
      */
-    public function setOuterBorder(string $range, $style): Sheet
+    public function setOuterBorder(string $range, $style)
     {
         $borderStyle = Style::borderOptions($style);
         $this->withRange($range)->applyOuterBorder($borderStyle['border-left-style'], $borderStyle['border-left-color']);
@@ -2038,7 +2038,7 @@ class Sheet
     /**
      * @return $this
      */
-    public function writeAreas(): Sheet
+    public function writeAreas()
     {
         $writer = $this->excel->getWriter();
         if ($this->open) {
@@ -2053,7 +2053,7 @@ class Sheet
     /**
      * @return $this
      */
-    public function clearAreas(): Sheet
+    public function clearAreas()
     {
         $this->cells = ['values' => [], 'styles' => []];
         $this->areas = [];
@@ -2067,7 +2067,7 @@ class Sheet
      *
      * @return $this
      */
-    public function writeAreasRows($writer): Sheet
+    public function writeAreasRows($writer)
     {
         if (!$this->areas) {
             return $this;
@@ -2162,7 +2162,7 @@ class Sheet
     /**
      * @return string
      */
-    public function maxCell(): string
+    public function maxCell()
     {
         return Excel::cellAddress($this->rowCountWritten, $this->colCountWritten);
     }
@@ -2170,7 +2170,7 @@ class Sheet
     /**
      * @return bool
      */
-    public function isRightToLeft(): bool
+    public function isRightToLeft()
     {
         return $this->excel->isRightToLeft();
     }
@@ -2183,7 +2183,7 @@ class Sheet
      *
      * @return void
      */
-    protected function _setStyleOptions(array $addr, string $key, array $options, ?bool $replace = false)
+    protected function _setStyleOptions(array $addr, string $key, array $options, $replace = false)
     {
         if ($addr) {
             $rowIdx = $addr['row_idx'];
@@ -2240,7 +2240,7 @@ class Sheet
      *
      * @return void
      */
-    protected function _touchStart(int $row, int $col, ?string $ref = null)
+    protected function _touchStart(int $row, int $col, $ref = null)
     {
         $this->lastTouch['row'] = [
             'row_idx' => $row,
@@ -2267,7 +2267,7 @@ class Sheet
      *
      * @return void
      */
-    protected function _touchEnd(int $row, int $col, ?string $ref = null)
+    protected function _touchEnd(int $row, int $col, $ref = null)
     {
         $this->lastTouch['row'] = [
             'row_idx' => $row,
@@ -2293,7 +2293,7 @@ class Sheet
      *
      * @return $this
      */
-    public function withLastCell(): Sheet
+    public function withLastCell()
     {
         /*
         $this->lastTouch['row'] = [
@@ -2326,7 +2326,7 @@ class Sheet
      *
      * @return $this
      */
-    public function withLastRow(): Sheet
+    public function withLastRow()
     {
         /*
         $this->lastTouch['cell'] = [
@@ -2353,7 +2353,7 @@ class Sheet
      *
      * @return $this
      */
-    public function withRange($range): Sheet
+    public function withRange($range)
     {
         $dimension = self::_rangeDimension($range);
         if ($dimension['rowNum1'] <= $this->rowCountWritten) {
@@ -2379,7 +2379,7 @@ class Sheet
      *
      * @return $this
      */
-    public function addNamedRange(string $range, string $name): Sheet
+    public function addNamedRange(string $range, string $name)
     {
         $dimension = self::_rangeDimension($range);
         if (isset($dimension['absAddress'])) {
@@ -2407,7 +2407,7 @@ class Sheet
      *
      * @return array
      */
-    public function getNamedRanges(): array
+    public function getNamedRanges()
     {
         return $this->namedRanges;
     }
@@ -2423,7 +2423,7 @@ class Sheet
      *
      * @return $this
      */
-    public function addNote(string $cell, $comment = null, array $noteStyle = []): Sheet
+    public function addNote(string $cell, $comment = null, $noteStyle = [])
     {
         if (func_num_args() === 1 || (func_num_args() === 2 && is_array( $comment )) ) {
             if ( func_num_args() === 2) {
@@ -2497,7 +2497,7 @@ class Sheet
     /**
      * @return array
      */
-    public function getNotes(): array
+    public function getNotes()
     {
         return $this->notes;
     }
@@ -2520,7 +2520,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyRowHeight(float $height): Sheet
+    public function applyRowHeight(float $height)
     {
         $this->setRowHeight($this->currentRow + 1, $height);
 
@@ -2535,7 +2535,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyBorder(string $style, ?string $color = '#000000'): Sheet
+    public function applyBorder(string $style, $color = '#000000')
     {
         $options = [
             'border-left-style' => $style,
@@ -2561,7 +2561,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyBorderLeft(string $style, ?string $color = '#000000'): Sheet
+    public function applyBorderLeft(string $style, $color = '#000000')
     {
         $options = [
             'border-left-style' => $style,
@@ -2584,7 +2584,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyBorderRight(string $style, ?string $color = '#000000'): Sheet
+    public function applyBorderRight(string $style, $color = '#000000')
     {
         $options = [
             'border-right-style' => $style,
@@ -2607,7 +2607,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyBorderTop(string $style, ?string $color = '#000000'): Sheet
+    public function applyBorderTop(string $style, $color = '#000000')
     {
         $options = [
             'border-top-style' => $style,
@@ -2630,7 +2630,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyBorderBottom(string $style, ?string $color = '#000000'): Sheet
+    public function applyBorderBottom(string $style, $color = '#000000')
     {
         $options = [
             'border-bottom-style' => $style,
@@ -2653,7 +2653,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyOuterBorder(string $style, ?string $color = '#000000'): Sheet
+    public function applyOuterBorder(string $style, $color = '#000000')
     {
         if ($this->lastTouch['area']['row_idx1'] === $this->lastTouch['area']['row_idx2']
             && $this->lastTouch['area']['col_idx1'] === $this->lastTouch['area']['col_idx2']) {
@@ -2775,7 +2775,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyInnerBorder(string $style, ?string $color = '#000000'): Sheet
+    public function applyInnerBorder(string $style, $color = '#000000')
     {
         if ($this->lastTouch['area']['row_idx1'] < $this->lastTouch['area']['row_idx2']
             || $this->lastTouch['area']['col_idx1'] < $this->lastTouch['area']['col_idx2']) {
@@ -2834,7 +2834,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyFont(string $fontName, ?int $fontSize = null, ?string $fontStyle = null, ?string $fontColor = null): Sheet
+    public function applyFont(string $fontName, ?int $fontSize = null, $fontStyle = null, $fontColor = null)
     {
         $font = ['font-name' => $fontName];
         if ($fontSize) {
@@ -2858,7 +2858,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyFontName(string $fontName): Sheet
+    public function applyFontName(string $fontName)
     {
         $this->_setStyleOptions([], 'font', ['font-name' => $fontName]);
 
@@ -2870,7 +2870,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyFontSize(float $fontSize): Sheet
+    public function applyFontSize(float $fontSize)
     {
         $this->_setStyleOptions([], 'font', ['font-size' => $fontSize]);
 
@@ -2882,21 +2882,21 @@ class Sheet
      *
      * @return $this
      */
-    public function applyFontStyle(string $fontStyle): Sheet
+    public function applyFontStyle(string $fontStyle)
     {
         $this->_setStyleOptions([], 'font', ['font-style-' . strtolower($fontStyle) => 1]);
 
         return $this;
     }
 
-	public function applyTextRotation(int $degrees): Sheet
+	public function applyTextRotation(int $degrees)
 	{
 		$this->_setStyleOptions([], 'format', [ 'format-text-rotation' => $degrees ] );
 
 		return $this;
 	}
 
-    public function applyFontStyleBold(): Sheet
+    public function applyFontStyleBold()
     {
         return $this->applyFontStyle('bold');
     }
@@ -2904,7 +2904,7 @@ class Sheet
     /**
      * @return $this
      */
-    public function applyFontStyleItalic(): Sheet
+    public function applyFontStyleItalic()
     {
         return $this->applyFontStyle('italic');
     }
@@ -2914,7 +2914,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyFontStyleUnderline(?bool $double = false): Sheet
+    public function applyFontStyleUnderline($double = false)
     {
         $this->_setStyleOptions([], 'font', ['font-style-underline' => $double ? 2 : 1]);
 
@@ -2924,7 +2924,7 @@ class Sheet
     /**
      * @return $this
      */
-    public function applyFontStyleStrikethrough(): Sheet
+    public function applyFontStyleStrikethrough()
     {
         return $this->applyFontStyle('strikethrough');
     }
@@ -2934,7 +2934,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyFontColor(string $fontColor): Sheet
+    public function applyFontColor(string $fontColor)
     {
         $this->_setStyleOptions([], 'font', ['font-color' => $fontColor]);
 
@@ -2948,7 +2948,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyColor(string $color): Sheet
+    public function applyColor(string $color)
     {
         return $this->applyFontColor($color);
     }
@@ -2960,7 +2960,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyFillColor(string $color): Sheet
+    public function applyFillColor(string $color)
     {
         $this->_setStyleOptions([], 'fill', ['fill-color' => $color]);
 
@@ -2972,7 +2972,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyBgColor(string $color): Sheet
+    public function applyBgColor(string $color)
     {
         return $this->applyFillColor($color);
     }
@@ -2983,7 +2983,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyTextAlign(string $textAlign, ?string $verticalAlign = null): Sheet
+    public function applyTextAlign(string $textAlign, $verticalAlign = null)
     {
         $options = ['format-align-horizontal' => $textAlign];
         if ($verticalAlign !== null) {
@@ -2999,7 +2999,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyVerticalAlign(string $verticalAlign): Sheet
+    public function applyVerticalAlign(string $verticalAlign)
     {
         $this->_setStyleOptions([], 'format', ['vertical-align' => $verticalAlign]);
 
@@ -3009,7 +3009,7 @@ class Sheet
     /**
      * @return $this
      */
-    public function applyTextCenter(): Sheet
+    public function applyTextCenter()
     {
         $this->_setStyleOptions([], 'format', ['format-align-horizontal' => 'center', 'format-align-vertical' => 'center']);
 
@@ -3021,7 +3021,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyTextWrap(bool $textWrap): Sheet
+    public function applyTextWrap(bool $textWrap)
     {
         $this->_setStyleOptions([], 'format', ['format-text-wrap' => 1]);
 
@@ -3033,7 +3033,7 @@ class Sheet
      *
      * @return $this
      */
-    public function applyTextColor(string $color): Sheet
+    public function applyTextColor(string $color)
     {
         $this->_setStyleOptions([], 'font', ['font-color' => $color]);
 

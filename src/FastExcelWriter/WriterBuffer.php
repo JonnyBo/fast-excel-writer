@@ -15,14 +15,14 @@ class WriterBuffer
     protected $fd = null;
 
     /** @var string  */
-    protected string $buffer = '';
+    protected $buffer = '';
 
     /** @var bool  */
-    protected ?bool $checkUtf8 = false;
+    protected $checkUtf8 = false;
 
-    protected string $fileName;
-    protected ?string $openFlags;
-    protected int $limit = 8191;
+    protected $fileName;
+    protected $openFlags;
+    protected $limit = 8191;
 
     /**
      * WriterBuffer constructor.
@@ -30,7 +30,7 @@ class WriterBuffer
      * @param string|null $openFlags
      * @param bool|null $checkUtf8
      */
-    public function __construct(string $filename, ?string $openFlags = 'wb', ?bool $checkUtf8 = false)
+    public function __construct(string $filename, $openFlags = 'wb', $checkUtf8 = false)
     {
         $this->fileName = $filename;
         $this->openFlags = $openFlags;
@@ -59,7 +59,7 @@ class WriterBuffer
     /**
      * @param bool|null $force
      */
-    public function flush(?bool $force = false)
+    public function flush($force = false)
     {
         if ($this->buffer || $force) {
             if (!$this->fd) {

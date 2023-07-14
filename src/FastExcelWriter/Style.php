@@ -80,20 +80,20 @@ class Style
 
     protected static $instance;
 
-    public array $localeSettings = [];
+    public $localeSettings = [];
 
-    public array $defaultFont = [];
-    protected int $defaultFontId = -1;
+    public $defaultFont = [];
+    protected $defaultFontId = -1;
 
-    public array $defaultStyle = [];
+    public $defaultStyle = [];
 
     /** @var array Specified styles for hyperlinks */
-    public array $hyperlinkStyle = [];
+    public $hyperlinkStyle = [];
 
     /** @var array Specified styles for formats '@...'  */
-    public array $defaultFormatStyles = [];
+    public $defaultFormatStyles = [];
 
-    public array $indexedColors = ['00000000',
+    public $indexedColors = ['00000000',
         '00FFFFFF', '00FF0000', '0000FF00', '000000FF', '00FFFF00', '00FF00FF', '0000FFFF', '00000000', '00FFFFFF',
         '00FF0000', '0000FF00', '000000FF', '00FFFF00', '00FF00FF', '0000FFFF', '00800000', '00008000', '00000080',
         '00808000', '00800080', '00008080', '00C0C0C0', '00808080', '009999FF', '00993366', '00FFFFCC', '00CCFFFF',
@@ -103,26 +103,26 @@ class Style
         '00969696', '00003366', '00339966', '00003300', '00333300', '00993300', '00993366', '00333399', '00333333',
     ];
 
-    protected array $elements = [];
+    protected $elements = [];
 
-    protected array $elementIndexes = [];
+    protected $elementIndexes = [];
 
-    protected static array $fontStyleDefines = ['bold', 'italic', 'strike', 'underline'];
+    protected static $fontStyleDefines = ['bold', 'italic', 'strike', 'underline'];
 
-    protected static array $borderStyleDefines = [self::BORDER_STYLE_THIN, self::BORDER_STYLE_MEDIUM, self::BORDER_STYLE_THICK, self::BORDER_STYLE_DASH_DOT,
+    protected static $borderStyleDefines = [self::BORDER_STYLE_THIN, self::BORDER_STYLE_MEDIUM, self::BORDER_STYLE_THICK, self::BORDER_STYLE_DASH_DOT,
         self::BORDER_STYLE_DASH_DOT_DOT, self::BORDER_STYLE_DASHED, self::BORDER_STYLE_DOTTED, self::BORDER_STYLE_DOUBLE, self::BORDER_STYLE_HAIR,
         self::BORDER_STYLE_MEDIUM_DASH_DOT, self::BORDER_STYLE_MEDIUM_DASH_DOT_DOT, self::BORDER_STYLE_MEDIUM_DASHED, self::BORDER_STYLE_SLANT_DASH_DOT];
 
 
 
-    public array $_styleCache = [];
+    public $_styleCache = [];
 
     /**
      * Constructor of Style
      *
      * @param array|null $options
      */
-    public function __construct(?array $options)
+    public function __construct($options)
     {
         self::$instance = $this;
         $defaultFont = [
@@ -185,7 +185,7 @@ class Style
      *
      * @return array
      */
-    public static function mergeStyles(array $styles): array
+    public static function mergeStyles($styles)
     {
         $result = [];
         if ($styles) {
@@ -208,7 +208,7 @@ class Style
      *
      * @return string|null
      */
-    protected static function _borderStyleName(string $styleName): ?string
+    protected static function _borderStyleName(string $styleName)
     {
         static $styleNames = [
             self::BORDER_NONE => 0,
@@ -238,7 +238,7 @@ class Style
      *
      * @return $this
      */
-    public function setDefaultFont(array $font): Style
+    public function setDefaultFont(array $font)
     {
         $this->defaultFont = self::normalizeFont($font);
 
@@ -250,7 +250,7 @@ class Style
      *
      * @return $this
      */
-    public function setDefaultStyle(array $style): Style
+    public function setDefaultStyle(array $style)
     {
         $this->defaultStyle = $style;
 
@@ -262,7 +262,7 @@ class Style
      *
      * @return $this
      */
-    public function setLocaleSettings(array $localeData): Style
+    public function setLocaleSettings(array $localeData)
     {
         if (!empty($localeData['functions'])) {
             uksort($localeData['functions'], static function($a, $b) {
@@ -283,7 +283,7 @@ class Style
      * @param $border
      * @return array|string[]
      */
-    public static function borderOptions($border): array
+    public static function borderOptions($border)
     {
         $result = [];
         if (is_string($border)) {
@@ -413,7 +413,7 @@ class Style
      *
      * @return array
      */
-    public static function normalizeBorder($border): ?array
+    public static function normalizeBorder($border)
     {
         $result = [
             'val' => [],
@@ -493,7 +493,7 @@ class Style
      *
      * @return array
      */
-    public static function normalizeFill($fill): array
+    public static function normalizeFill($fill)
     {
         $result = [];
 
@@ -547,7 +547,7 @@ class Style
      *
      * @return string|null
      */
-    public static function normalizeColor(string $color): ?string
+    public static function normalizeColor(string $color)
     {
         static $normColors = [];
 
@@ -588,7 +588,7 @@ class Style
      *
      * @return array|null[]
      */
-    protected static function _getFamilyFont($fontName): array
+    protected static function _getFamilyFont($fontName)
     {
         static $defaultFontsNames = [
             'Times New Roman' => [
@@ -628,7 +628,7 @@ class Style
      *
      * @return array
      */
-    public static function normalizeFont($font): array
+    public static function normalizeFont($font)
     {
         $result = self::$instance->defaultFont;
         $result['tag'] = [];
@@ -748,7 +748,7 @@ class Style
      *
      * @return array
      */
-    public static function normalize(array $style): array
+    public static function normalize(array $style)
     {
         $result = [];
         foreach($style as $styleKey => $styleVal) {
@@ -961,7 +961,7 @@ class Style
      *
      * @return array
      */
-    protected function findElement(string $sectionName, int $index): array
+    protected function findElement($sectionName, $index)
     {
         if (isset($this->elementIndexes[$sectionName][$index], $this->elements[$sectionName][$this->elementIndexes[$sectionName][$index]])) {
             return $this->elements[$sectionName][$this->elementIndexes[$sectionName][$index]];
@@ -977,7 +977,7 @@ class Style
      *
      * @return int
      */
-    protected function addElement(string $sectionName, $value, array $fullStyle = null): int
+    protected function addElement($sectionName, $value, $fullStyle = null)
     {
         if (is_string($value)) {
             $key = $value;
@@ -1009,7 +1009,7 @@ class Style
      *
      * @return array
      */
-    protected function findStyleFont(int $index): array
+    protected function findStyleFont(int $index)
     {
         return $this->findElement('fonts', $index);
     }
@@ -1020,7 +1020,7 @@ class Style
      *
      * @return int
      */
-    protected function addStyleFont(array &$cellStyle, array &$fullStyle = []): int
+    protected function addStyleFont(&$cellStyle, &$fullStyle = [])
     {
         $index = 0;
         if (!empty($cellStyle['font'])) {
@@ -1132,7 +1132,7 @@ class Style
      *
      * @return array
      */
-    protected function findStyleFill(int $index): array
+    protected function findStyleFill(int $index)
     {
         return $this->findElement('fills', $index);
     }
@@ -1143,7 +1143,7 @@ class Style
      *
      * @return int
      */
-    protected function addStyleFill(array &$cellStyle, array &$fullStyle = []): int
+    protected function addStyleFill(&$cellStyle, &$fullStyle = [])
     {
         $index = 0;
         $fill = [];
@@ -1185,7 +1185,7 @@ class Style
      *
      * @return array
      */
-    protected function findStyleBorder(int $index): array
+    protected function findStyleBorder($index)
     {
         return $this->findElement('borders', $index);
     }
@@ -1196,7 +1196,7 @@ class Style
      *
      * @return int
      */
-    protected function addStyleBorder(array &$cellStyle, array &$fullStyle = []): int
+    protected function addStyleBorder(&$cellStyle, &$fullStyle = [])
     {
         $index = 0;
         if (!empty($cellStyle['border'])) {
@@ -1222,7 +1222,7 @@ class Style
      *
      * @return int
      */
-    protected function addXfs(array $cellStyle, array &$fullStyle = []): int
+    protected function addXfs($cellStyle, &$fullStyle = [])
     {
         if (isset($cellStyle['options'])) {
             $fullStyle['options'] = $cellStyle['options'];
@@ -1239,7 +1239,7 @@ class Style
      *
      * @return int
      */
-    public function addCellStyle(string $numFormat, ?array $cellStyle = [], ?array &$fullStyle = []): int
+    public function addCellStyle(string $numFormat, $cellStyle = [], &$fullStyle = [])
     {
         $fullStyle = [];
         if (empty($cellStyle)) {
@@ -1297,7 +1297,7 @@ class Style
      *
      * @return int
      */
-    public function addStyle(array $cellStyle, ?array &$resultStyle = []): int
+    public function addStyle($cellStyle, &$resultStyle = [])
     {
         if (isset($cellStyle['format']['format-pattern'])) {
             $numFormat = $cellStyle['format']['format-pattern'];
@@ -1314,7 +1314,7 @@ class Style
      *
      * @return array
      */
-    public function findCellStyle(int $index): array
+    public function findCellStyle(int $index)
     {
         return $this->findElement('cellXfs', $index);
     }
@@ -1324,7 +1324,7 @@ class Style
      *
      * @return array
      */
-    protected function getElements(string $sectionName): array
+    protected function getElements(string $sectionName)
     {
         if (!empty($this->elements[$sectionName])) {
             $result = [];
@@ -1340,7 +1340,7 @@ class Style
     /**
      * @return array
      */
-    public function getStyleFonts(): array
+    public function getStyleFonts()
     {
         return $this->getElements('fonts');
     }
@@ -1348,7 +1348,7 @@ class Style
     /**
      * @return array
      */
-    public function getStyleFills(): array
+    public function getStyleFills()
     {
         return $this->getElements('fills');
     }
@@ -1356,7 +1356,7 @@ class Style
     /**
      * @return array
      */
-    public function getStyleBorders(): array
+    public function getStyleBorders()
     {
         return $this->getElements('borders');
     }
@@ -1364,7 +1364,7 @@ class Style
     /**
      * @return array
      */
-    public function getStyleCellXfs(): array
+    public function getStyleCellXfs()
     {
         return $this->getElements('cellXfs');
     }
@@ -1375,7 +1375,7 @@ class Style
      *
      * @return string
      */
-    private static function determineNumberFormatType(string $numFormat, string $format = null): string
+    private static function determineNumberFormatType($numFormat, $format = null)
     {
         if ($format === '@URL') {
             return 'n_shared_string';
@@ -1422,7 +1422,7 @@ class Style
      *
      * @return string
      */
-    private static function numberFormatStandardized($numFormat, ?int &$xfId = 0): string
+    private static function numberFormatStandardized($numFormat, &$xfId = 0)
     {
         if (!$numFormat || !is_scalar($numFormat) || $numFormat === 'auto' || $numFormat === 'GENERAL') {
             return 'GENERAL';
@@ -1488,7 +1488,7 @@ class Style
      *
      * @return array
      */
-    public function defineFormatType($format): array
+    public function defineFormatType($format)
     {
         static $defines = [];
 
@@ -1514,7 +1514,7 @@ class Style
     /**
      * @return array
      */
-    public function _getNumberFormats(): array
+    public function _getNumberFormats()
     {
         if (isset($this->elements['numFmts'])) {
             return array_keys($this->elements['numFmts']);
