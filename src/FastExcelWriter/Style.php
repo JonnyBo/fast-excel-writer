@@ -103,7 +103,7 @@ class Style
         '00969696', '00003366', '00339966', '00003300', '00333300', '00993300', '00993366', '00333399', '00333333',
     ];
 
-    protected $elements = [];
+    public $elements = [];
 
     protected $elementIndexes = [];
 

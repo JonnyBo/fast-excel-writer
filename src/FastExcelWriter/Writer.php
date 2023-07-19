@@ -206,7 +206,7 @@ class Writer
     {
         if (!empty($this->tempFiles)) {
             foreach ($this->tempFiles as $tempFile) {
-                @unlink($tempFile);
+                //@unlink($tempFile);
             }
         }
     }
@@ -269,6 +269,7 @@ class Writer
     public function saveToFile(string $fileName, $overWrite = true, $metadata = [])
     {
         $sheets = $this->excel->getSheets();
+        /*
         foreach ($sheets as $sheet) {
             if (!$sheet->open) {
                 // open and write areas
@@ -276,7 +277,7 @@ class Writer
             }
             $this->writeSheetDataEnd($sheet);//making sure all footers have been written
         }
-
+        */
         if (!is_dir(dirname($fileName))) {
             ExceptionFile::throwNew('Directory "%s" for output file is not exist', dirname($fileName));
         }
@@ -600,8 +601,9 @@ class Writer
         }
 
         $sheet->writeDataEnd();
-
         $mergedCells = $sheet->getMergedCells();
+        //print_r($mergedCells);
+        //exit();
         if ($mergedCells) {
             $sheet->fileWriter->write('<mergeCells>');
             foreach ($mergedCells as $range) {
@@ -609,7 +611,6 @@ class Writer
             }
             $sheet->fileWriter->write('</mergeCells>');
         }
-
         if ($sheet->autoFilter) {
             $minCell = $sheet->autoFilter;
             $maxCell = Excel::cellAddress($sheet->rowCountWritten, $sheet->colCountWritten);
@@ -636,7 +637,7 @@ class Writer
             }
             $sheet->fileWriter->write('</hyperlinks>');
         }
-
+        
         $sheet->fileWriter->write('<pageMargins left="0.5" right="0.5" top="1.0" bottom="1.0" header="0.5" footer="0.5"/>');
 
         $sheet->fileWriter->write("<pageSetup  paperSize=\"1\" useFirstPageNumber=\"1\" horizontalDpi=\"0\" verticalDpi=\"0\" $pageSetupAttr />");
@@ -651,10 +652,12 @@ class Writer
         }
 
         $sheet->fileWriter->write('</worksheet>');
+
         $sheet->fileWriter->flush(true);
 
         $headWriter = $this->_writeSheetHead($sheet);
-        $headWriter->appendFileWriter($sheet->fileWriter, $this->tempFilename());;
+
+        $headWriter->appendFileWriter($sheet->fileWriter, $this->tempFilename());
 
         $sheet->fileWriter->close();
         $sheet->close = true;
@@ -880,6 +883,8 @@ class Writer
         //// +++++++++++
         //// <fonts/>
         $fonts = $this->excel->style->getStyleFonts();
+        //print_r($fonts);
+        //exit();
         if (!$fonts) {
             $file->write('<fonts count="0"/>');
         }
@@ -952,6 +957,9 @@ class Writer
                 }
                 if (!empty($cellXf['format']['format-align-vertical'])) {
                     $alignmentAttr .= ' vertical="' . $cellXf['format']['format-align-vertical'] . '"';
+                }
+                if (!empty($cellXf['format']['format-wrap-text'])) {
+                    $alignmentAttr .= ' wrapText="true"';
                 }
                 if (!empty($cellXf['format']['format-text-wrap'])) {
                     $alignmentAttr .= ' wrapText="true"';

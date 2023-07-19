@@ -100,7 +100,7 @@ class Sheet
     // Current column index
     protected $currentCol = 0;
 
-    protected $mergeCells = [];
+    public $mergeCells = [];
     protected $totalArea = [];
     protected $areas = [];
 
@@ -201,7 +201,6 @@ class Sheet
         $this->fileWriter = $fileWriter;
         $this->fileTempName = $fileWriter->getFileName();
         $this->fileRels = $this->fileTempName . '.rels';
-
         return $this;
     }
 
@@ -879,7 +878,7 @@ class Sheet
      * @param array|null $rowOptions Specified style for the row
      * @param array|null $cellsOptions Styles of all cells of row (incl. empty)
      */
-    protected function _writeRow(?Writer $writer, array $row = [], array $rowOptions = [], array $cellsOptions = [])
+    public function _writeRow(?Writer $writer, array $row = [], array $rowOptions = [], array $cellsOptions = [])
     {
         static $_styleCache = [];
 
@@ -1872,14 +1871,14 @@ class Sheet
                 $addr = Excel::cellAddress($colIdx + 1, $rowIdx + 1);
                 Exception::throwNew('Value for cell %s must be scalar', $addr);
             }
-            $this->cells['values'][$rowIdx][$colIdx] = $value;
+            //$this->cells['values'][$rowIdx][$colIdx] = $value;
             if ($changeCurrent) {
                 $this->currentRow = $rowIdx;
                 $this->currentCol = $colIdx;
             }
         }
         if ($styles) {
-            $this->cells['styles'][$rowIdx][$colIdx] = Style::normalize($styles);
+            //$this->cells['styles'][$rowIdx][$colIdx] = Style::normalize($styles);
         }
 
         return $dimension;
@@ -2072,7 +2071,7 @@ class Sheet
         if (!$this->areas) {
             return $this;
         }
-
+        /*
         if (!empty($this->cells['values']) || !empty($this->cells['styles'])) {
             $maxRow = max(array_keys($this->cells['values']) + array_keys($this->cells['styles']));
             // writes row by row
@@ -2108,6 +2107,7 @@ class Sheet
             }
             $this->clearAreas();
         }
+        */
         $this->currentRow = $this->rowCountWritten;
         $this->currentCol = 0;
         $this->_touchEnd($this->currentRow, $this->currentCol, 'cell');
@@ -2129,6 +2129,9 @@ class Sheet
         }
 
         $sheetFileName = $writer->tempFilename();
+
+        $writeBuffer = $writer::makeWriteBuffer($sheetFileName);
+
         $this->setFileWriter($writer::makeWriteBuffer($sheetFileName));
 
         $this->fileWriter->write('<sheetData>');

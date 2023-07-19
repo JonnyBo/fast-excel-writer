@@ -51,6 +51,7 @@ class WriterBuffer
     public function write($string)
     {
         $this->buffer .= $string;
+
         if (isset($this->buffer[$this->limit])) {
             $this->flush();
         }
@@ -61,6 +62,7 @@ class WriterBuffer
      */
     public function flush($force = false)
     {
+
         if ($this->buffer || $force) {
             if (!$this->fd) {
                 $this->fd = fopen($this->fileName, $this->openFlags);
@@ -72,6 +74,7 @@ class WriterBuffer
                 //Excel::log("Error, invalid UTF8 encoding detected");
                 $this->checkUtf8 = false;
             }
+
             fwrite($this->fd, $this->buffer);
             $this->buffer = '';
         }
@@ -150,20 +153,16 @@ class WriterBuffer
     public function appendFileWriter($fileWriter, $newFileName)
     {
         $fdTarget = fopen($newFileName, 'wb');
-
         $this->close();
         $fd1 = fopen($this->getFileName(), 'rb');
-
         $fileWriter->close();
         $fd2 = fopen($fileWriter->getFileName(), 'rb');
-
         $n1 = stream_copy_to_stream($fd1, $fdTarget);
         fclose($fd1);
         $n2 = stream_copy_to_stream($fd2, $fdTarget);
         fclose($fd2);
         $this->fd = $fdTarget;
         $this->fileName = $newFileName;
-
         return $n1 + $n2;
     }
 }
