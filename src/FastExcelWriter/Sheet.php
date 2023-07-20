@@ -1013,6 +1013,11 @@ class Sheet
                 $numberFormat = $resultStyle['number_format'];
                 $numberFormatType = $resultStyle['number_format_type'];
 
+                if ($rowIdx == 8 && $colIdx == 0) {
+                    //dd($_styleCache);
+                    //dd($cellValue, $numberFormat, $numberFormatType, $cellStyle, $resultStyle);
+                }
+
                 if (!empty($cellStyle['options']['width-auto'])) {
                     $this->_columnWidth($colIdx, $cellValue, $numberFormat, $resultStyle ?? []);
                 }

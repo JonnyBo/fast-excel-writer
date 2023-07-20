@@ -168,7 +168,7 @@ class Style
         $index = $this->addElement('borders', $styleVal);
 
         $styleVal = [
-            '_num_fmt_Id' => 0,
+            '_num_fmt_id' => 0,
             '_font_id' => 0,
             '_fill_id' => 0,
             '_border_id' => 0,
@@ -1269,19 +1269,19 @@ class Style
             $cellStyle['_xf_id'] = 0;
         }
 
-        if ($numFormat && !isset($cellStyle['_num_fmt_Id'])) {
-            $cellStyle['_num_fmt_Id'] = 0;
+        if ($numFormat && !isset($cellStyle['_num_fmt_id'])) {
+            $cellStyle['_num_fmt_id'] = 0;
 
             $numberFormat = self::numberFormatStandardized($numFormat, $xfId);
             $numberFormatType = self::determineNumberFormatType($numberFormat, $numFormat);
-            $cellStyle['_num_fmt_Id'] = $this->addElement('numFmts', $numberFormat);
+            $cellStyle['_num_fmt_id'] = $this->addElement('numFmts', $numberFormat);
 
             $fullStyle['format']['format-pattern'] = $numFormat;
             $fullStyle['number_format'] = $numberFormat;
             $fullStyle['number_format_type'] = $numberFormatType;
         }
         else {
-            $cellStyle['_num_fmt_Id'] = 0;
+            $cellStyle['_num_fmt_id'] = 0;
         }
 
         $cellXfsId = $this->addXfs($cellStyle, $fullStyle);
@@ -1422,7 +1422,7 @@ class Style
      *
      * @return string
      */
-    private static function numberFormatStandardized($numFormat, &$xfId = 0)
+    public static function numberFormatStandardized($numFormat, &$xfId = 0)
     {
         if (!$numFormat || !is_scalar($numFormat) || $numFormat === 'auto' || $numFormat === 'GENERAL') {
             return 'GENERAL';

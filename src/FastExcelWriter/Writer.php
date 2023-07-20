@@ -760,23 +760,24 @@ class Writer
             $file->write('<c r="' . $cellName . '" s="' . $cellStyleIdx . '" t="inlineStr"><is><t xml:space="preserve">' . self::xmlSpecialChars($value) . '</t></is></c>');
         }
         else {
-            if ($numFormatType === 'n_date' || $numFormatType === 'n_datetime') {
-                $dateValue = self::convertDateTime($value);
+            /*if ($numFormatType === 'n_date' || $numFormatType === 'n_datetime') {
+                //$dateValue = self::convertDateTime($value);
                 if ($dateValue === false) {
                     $numFormatType = 'n_auto';
                 }
                 else {
                     $value = $dateValue;
                 }
-            }
+            }*/
             if ($numFormatType === 'n_date') {
                 //$file->write('<c r="' . $cellName . '" s="' . $cellStyleIdx . '" t="n"><v>' . (int)self::convertDateTime($value) . '</v></c>');
-                $file->write('<c r="' . $cellName . '" s="' . $cellStyleIdx . '"><v>' . (int)$value . '</v></c>');
+                $file->write('<c r="' . $cellName . '" s="' . $cellStyleIdx . '"><v>' . $value . '</v></c>');
             }
             elseif ($numFormatType === 'n_datetime') {
                 $file->write('<c r="' . $cellName . '" s="' . $cellStyleIdx . '" t="n"><v>' . $value . '</v></c>');
             }
             elseif ($numFormatType === 'n_numeric') {
+                //dd($value);
                 if (!is_int($value) && !is_float($value)) {
                     $value = self::xmlSpecialChars($value);
                 }
@@ -947,6 +948,7 @@ class Writer
         }
         else {
             $file->write('<cellXfs count="' . count($cellXfs) . '">');
+            //dd($cellXfs);
             foreach ($cellXfs as $cellXf) {
                 $alignmentAttr = '';
                 if (!empty($cellXf['format']['format-text-rotation'])) {
