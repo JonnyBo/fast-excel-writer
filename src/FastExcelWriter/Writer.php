@@ -206,7 +206,7 @@ class Writer
     {
         if (!empty($this->tempFiles)) {
             foreach ($this->tempFiles as $tempFile) {
-                //@unlink($tempFile);
+                @unlink($tempFile);
             }
         }
     }
